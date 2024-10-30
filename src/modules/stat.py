@@ -4,6 +4,8 @@ from typing import List
 
 @dataclass
 class Stat(object):
+    """Statsのような気もするがStatで
+    """
     character: str
     rp: float
     pick_percentage: float
@@ -17,6 +19,11 @@ class Stat(object):
     average_animal_kills: float
 
     def to_list(self) -> List[str]:
+        """文字列リストに変換
+
+        Returns:
+            List[str]: 文字列リスト
+        """
         return [
             self.character,
             str(self.rp),
@@ -30,3 +37,11 @@ class Stat(object):
             str(self.average_player_kills),
             str(self.average_animal_kills),
         ]
+
+    def extract(self) -> str:
+        """いい感じの出力情報に変換する
+
+        Returns:
+            str: いい感じの文字列
+        """
+        return f"実験体: {self.character}, RP: {self.rp}, Pick: {self.pick_percentage}%, Win: {self.win_percentage}%, TOP 3: {self.top3_percentage}%, Avg.Rank: {self.average_rank}"

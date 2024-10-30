@@ -5,16 +5,46 @@ import pandas as pd
 import csv
 
 
-class DakGGStatsParser(object):
-    URL = "https://dak.gg/er/statistics"
+class DakGGAPI(object):
+    """APIというほどのものでもないけどAPIということで"""
+    URL = "https://dak.gg/er/statistics?hl=ja"
 
-    def execute(self) -> None:
+    def get_stats(self) -> List[Stat]:
+        """各キャラの統計一覧を取得する
+
+        Returns:
+            List[Stat]: 統計一覧
+        """
+        live_stats = self.get_table_from_dakgg()
+        stats = self.deserialize_stats(live_stats)
+        return stats
+
+    def write_stats_to_csv(self, header: List[str], stats: List[Stat]) -> None:
+        """データをcsvに書き出す
+
+        Args:
+            header (List[str]): ヘッダ
+            stats (List[Stat]): 統計一覧
+        """
         live_stats = self.get_table_from_dakgg()
         header = self.create_header(live_stats)
-        stats = self.create_stats(live_stats)
-        self.write_csv(header=header, stats=stats)
+        stats = self.deserialize_stats(live_stats)
+        print("Writing stats to csv.")
+        with open("./stats.csv", "w") as f:
+            writer = csv.writer(f)
+            writer.writerow(header)
+            for stat in stats:
+                stats_row = stat.to_list()
+                print(stats_row)
+                writer.writerow(stats_row)
+        print("Writing completed.")
 
     def get_table_from_dakgg(self) -> pd.DataFrame:
+        """データをDakGGから取得する
+
+        Returns:
+            pd.DataFrame: 取得したデータ
+        """
         # ライブ統計テーブル取得
         print("Getting live stats.")
         driver = webdriver.Chrome()
@@ -28,13 +58,29 @@ class DakGGStatsParser(object):
         return live_stats
 
     def create_header(self, live_stats: pd.DataFrame) -> List[str]:
+        """DakGGから取得したデータからヘッダを作成する
+
+        Args:
+            live_stats (pd.DataFrame): データ
+
+        Returns:
+            List[str]: ヘッダ
+        """
         # ヘッダ取得
         header = list(live_stats.columns)
         # NOTE: ランクを削除し、ピック%とピック数を別のセルに記録するためにヘッダの整形が必要
         header = header[1:4] + ["#Pick"] + header[4:]
         return header
 
-    def create_stats(self, live_stats: pd.DataFrame) -> List[Stat]:
+    def deserialize_stats(self, live_stats: pd.DataFrame) -> List[Stat]:
+        """こういうのはdeserializeというらしいと聞いた気がするがあっているのだろうか
+
+        Args:
+            live_stats (pd.DataFrame): データ
+
+        Returns:
+            List[Stat]: 変換後のデータ
+        """
         rows = live_stats.values
         stats: List[Stat] = []
         for row in rows:
@@ -54,14 +100,3 @@ class DakGGStatsParser(object):
             )
             stats.append(stat)
         return stats
-
-    def write_csv(self, header: List[str], stats: List[Stat]) -> None:
-        print("Writing stats to csv.")
-        with open("./stats.csv", "w") as f:
-            writer = csv.writer(f)
-            writer.writerow(header)
-            for stat in stats:
-                stats_row = stat.to_list()
-                print(stats_row)
-                writer.writerow(stats_row)
-        print("Writing completed.")
