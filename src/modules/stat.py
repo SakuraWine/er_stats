@@ -44,4 +44,4 @@ class Stat(object):
         Returns:
             str: いい感じの文字列
         """
-        return f"実験体: {self.character}, RP: {self.rp}, Pick: {self.pick_percentage}%, Win: {self.win_percentage}%, TOP 3: {self.top3_percentage}%, Avg.Rank: {self.average_rank}"
+        return f"【{self.character}】 [RP: {self.rp}] [Pick: {self.pick_percentage}%] [Win: {self.win_percentage}%] [TOP 3: {self.top3_percentage}%] [Avg.Rank: {self.average_rank}]"
