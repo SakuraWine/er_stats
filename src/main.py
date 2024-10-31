@@ -1,27 +1,14 @@
-from modules.dakgg_api import DakGGAPI
-from typing import Optional, List, Tuple
-from modules.stat import Stat
+from modules.dak_api import DakAPI
+from typing import Optional, Tuple
 import argparse
 
 
-def extract_character_by_threshold(pick_threshold: Optional[float], win_threshold: Optional[float]) -> List[Stat]:
-    api = DakGGAPI()
-    stats = api.get_stats()
-    if pick_threshold:
-        print(f"Pick % threshold : {pick_threshold}%")
-        stats = [stat for stat in stats if stat.pick_percentage >= pick_threshold]
-    if win_threshold:
-        print(f"Win % threshold : {win_threshold}%")
-        stats = [stat for stat in stats if stat.win_percentage >= win_threshold]
-    return stats
-
-
-def sort_by_descending_win_percentage(stats: List[Stat]) -> List[Stat]:
-    stats.sort(key=lambda stat: stat.win_percentage, reverse=True)
-    return stats
-
-
 def parse_arg() -> Tuple[Optional[float], Optional[float]]:
+    """コマンドライン引数解析
+
+    Returns:
+        Tuple[Optional[float], Optional[float]]: 解析後の引数
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--pick_threshold")
     parser.add_argument("-w", "--win_threshold")
@@ -36,8 +23,13 @@ def parse_arg() -> Tuple[Optional[float], Optional[float]]:
 
 
 def execute():
+    """実行"""
     pick_threshold, win_threshold = parse_arg()
-    stats = extract_character_by_threshold(pick_threshold, win_threshold)
+    if not any([pick_threshold, win_threshold]):
+        print("No threshold were given.")
+        exit(0)
+    api = DakAPI()
+    stats = api.search_by_threshold(pick_threshold, win_threshold)
     print("Descending order of Win %.")
     stats.sort(key=lambda stat: stat.win_percentage, reverse=True)
     rank_count = 1
