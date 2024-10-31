@@ -66,8 +66,6 @@ class DakAPI(object):
         if win_threshold:
             print(f"Win % threshold : {win_threshold}%")
             stats = [stat for stat in stats if stat.win_percentage >= win_threshold]
-        # NOTE: 現在は固定で勝率が高い順にソートしている
-        stats.sort(key=lambda stat: stat.win_percentage, reverse=True)
         return stats
 
     def get_diff_prev_and_current(self) -> List[Stat]:
