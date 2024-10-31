@@ -1,6 +1,7 @@
 from typing import List
 from modules.stat import Stat
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import pandas as pd
 import csv
 
@@ -61,7 +62,9 @@ class DakRequest(object):
             pd.DataFrame: 取得したデータ
         """
         # ライブ統計テーブル取得
-        driver = webdriver.Chrome()
+        options = Options()
+        options.add_argument('--headless')
+        driver = webdriver.Chrome(options)
         driver.get(url)
         html = driver.page_source
         tables = pd.read_html(html)

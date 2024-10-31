@@ -8,7 +8,7 @@ class DakAPI(object):
     # 強くなったと判断するピック率と勝率の閾値。前回パッチと今回パッチでの値の差が以下を上回っていたら強くなったと判断する
     # TODO: 適当に決めているので検討が必要かもしれない
     BUFFED_PICK_THRESHOLD = 0.0
-    BUFFED_WIN_THRESHOLD = 0.5
+    BUFFED_WIN_THRESHOLD = 1.0
 
     # 環境で強そうと判断するピック率と勝率の閾値。今回パッチでの統計が以下の値を上回っていたら強そうと判断する
     # TODO: これも適当に決めている
