@@ -4,6 +4,7 @@ from modules.stat import Stat
 
 
 class DakAPI(object):
+    """APIという程のものでもないけどAPI"""
     # 強くなったと判断するピック率と勝率の閾値。前回パッチと今回パッチでの値の差が以下を上回っていたら強くなったと判断する
     # TODO: 適当に決めているので検討が必要かもしれない
     BUFFED_PICK_THRESHOLD = 0.0
@@ -14,7 +15,6 @@ class DakAPI(object):
     META_PICK_THRESHOLD = 2.0
     META_WIN_THRESHOLD = 13.0
 
-    """APIという程のものでもないけどAPI"""
     def __init__(self) -> None:
         self.request = DakRequest()
 
@@ -27,7 +27,8 @@ class DakAPI(object):
         print("Searching meta character.")
         print(f"Pick % threshold : {self.META_PICK_THRESHOLD}%")
         print(f"Win % threshold : {self.META_WIN_THRESHOLD}%")
-        stats = self.search_by_threshold(pick_threshold=self.META_PICK_THRESHOLD, win_threshold=self.META_WIN_THRESHOLD)
+        stats = self.search_by_threshold(
+            pick_threshold=self.META_PICK_THRESHOLD, win_threshold=self.META_WIN_THRESHOLD)
         if len(stats) == 0:
             print("Meta character not found...")
         else:
@@ -44,7 +45,8 @@ class DakAPI(object):
         """
         print("Searching buffed character.")
         diff_stats = self.get_diff_prev_and_current()
-        stats = [stat for stat in diff_stats if stat.pick_percentage > self.BUFFED_PICK_THRESHOLD and stat.win_percentage > self.BUFFED_WIN_THRESHOLD]
+        stats = [stat for stat in diff_stats if (stat.pick_percentage > self.BUFFED_PICK_THRESHOLD) and (
+            stat.win_percentage > self.BUFFED_WIN_THRESHOLD)]
         if len(stats) == 0:
             print("Buffed character not found...")
         return stats
@@ -62,7 +64,8 @@ class DakAPI(object):
         stats = self.request.get_current_patch_stats()
         if pick_threshold:
             print(f"Pick % threshold : {pick_threshold}%")
-            stats = [stat for stat in stats if stat.pick_percentage >= pick_threshold]
+            stats = [stat for stat in stats if stat.pick_percentage >=
+                     pick_threshold]
         if win_threshold:
             print(f"Win % threshold : {win_threshold}%")
             stats = [stat for stat in stats if stat.win_percentage >= win_threshold]
@@ -80,7 +83,8 @@ class DakAPI(object):
         prev_stats = {stat.character: stat for stat in prev_stats}
         for current_stat in current_stats:
             if not current_stat.character in prev_stats:
-                print(f"Error : Character not found : {current_stat.character}")
+                print(
+                    f"Error : Character not found : {current_stat.character}")
                 print("New character may implemented in current patch.")
                 continue
             prev_stat = prev_stats[current_stat.character]
