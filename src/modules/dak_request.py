@@ -7,28 +7,41 @@ import csv
 
 class DakRequest(object):
     """Dak.GGから情報を引っ張ってくるクラス"""
-    URL = "https://dak.gg/er/statistics?hl=ja"
 
-    def get_stats(self) -> List[Stat]:
-        """各キャラの統計一覧を取得する
+    def get_current_patch_stats(self) -> List[Stat]:
+        """今パッチのライブ統計取得
 
         Returns:
-            List[Stat]: 統計一覧
+            List[Stat]: 今パッチのライブ統計データ
         """
-        live_stats = self.get_table_from_dakgg()
-        stats = self.deserialize_stats(live_stats)
+        url = "https://dak.gg/er/statistics?period=currentPatch&hl=ja"
+        live_stats = self.__get_table_from_dakgg(url)
+        stats = self.__deserialize_stats(live_stats)
         return stats
 
-    def write_stats_to_csv(self, header: List[str], stats: List[Stat]) -> None:
+    def get_prev_patch_stats(self) -> List[Stat]:
+        """前パッチのライブ統計取得
+
+        Returns:
+            List[Stat]: 前パッチのライブ統計データ
+        """
+        url = "https://dak.gg/er/statistics?period=prevPatch&hl=ja"
+        live_stats = self.__get_table_from_dakgg(url)
+        stats = self.__deserialize_stats(live_stats)
+        return stats
+
+    def __write_stats_to_csv(self, url: str, header: List[str], stats: List[Stat]) -> None:
         """データをcsvに書き出す
+            NOTE: あんまり使わないのでprivateにしてある
 
         Args:
+            url (str): 情報取得対象のURL
             header (List[str]): ヘッダ
             stats (List[Stat]): 統計一覧
         """
-        live_stats = self.get_table_from_dakgg()
+        live_stats = self.__get_table_from_dakgg(url)
         header = self.create_header(live_stats)
-        stats = self.deserialize_stats(live_stats)
+        stats = self.__deserialize_stats(live_stats)
         print("Writing stats to csv.")
         with open("./stats.csv", "w") as f:
             writer = csv.writer(f)
@@ -39,7 +52,7 @@ class DakRequest(object):
                 writer.writerow(stats_row)
         print("Writing completed.")
 
-    def get_table_from_dakgg(self) -> pd.DataFrame:
+    def __get_table_from_dakgg(self, url: str) -> pd.DataFrame:
         """データをDakGGから取得する
 
         Returns:
@@ -48,7 +61,7 @@ class DakRequest(object):
         # ライブ統計テーブル取得
         print("Getting live stats.")
         driver = webdriver.Chrome()
-        driver.get(self.URL)
+        driver.get(url)
         html = driver.page_source
         tables = pd.read_html(html)
         if len(tables) > 1:
@@ -72,7 +85,7 @@ class DakRequest(object):
         header = header[1:4] + ["#Pick"] + header[4:]
         return header
 
-    def deserialize_stats(self, live_stats: pd.DataFrame) -> List[Stat]:
+    def __deserialize_stats(self, live_stats: pd.DataFrame) -> List[Stat]:
         """こういうのはdeserializeというらしいと聞いた気がするがあっているのだろうか
 
         Args:

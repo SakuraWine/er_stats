@@ -21,7 +21,6 @@ def parse_arg() -> Tuple[Optional[float], Optional[float]]:
         win_threshold = float(win_threshold)
     return pick_threshold, win_threshold
 
-
 def execute():
     """実行"""
     pick_threshold, win_threshold = parse_arg()
@@ -34,8 +33,12 @@ def execute():
     stats.sort(key=lambda stat: stat.win_percentage, reverse=True)
     rank_count = 1
     for character in stats:
-        row = f"{rank_count}. " + character.extract()
+        row = f"{rank_count}. " + character.to_summary()
         print(row)
+        rank_count += 1
+    diff = api.search_buffed()
+    for character in diff:
+        print(f"{character.to_diff()}")
         rank_count += 1
 
 
