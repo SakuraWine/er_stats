@@ -82,6 +82,11 @@ class Stat(object):
         return f"【{self.character}】 [RP: {self.rp}] [Pick: {self.pick_percentage}%] [Win: {self.win_percentage}%] [TOP 3: {self.top3_percentage}%] [Avg.Rank: {self.average_rank}]"
 
     def to_diff(self) -> str:
+        """差分として出力する際の情報に変換する
+
+        Returns:
+            str: いい感じの文字列
+        """
         rp = "+" + str(self.rp) if self.rp > 0 else str(self.rp)
         pick_percentage = "+" + str(self.pick_percentage) if self.pick_percentage > 0 else str(self.pick_percentage)
         # pick_num = "+" + str(self.pick_num) if self.pick_num > 0 else str(self.pick_num)

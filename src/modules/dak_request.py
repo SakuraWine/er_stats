@@ -14,6 +14,7 @@ class DakRequest(object):
         Returns:
             List[Stat]: 今パッチのライブ統計データ
         """
+        print("Getting current live stats.")
         url = "https://dak.gg/er/statistics?period=currentPatch&hl=ja"
         live_stats = self.__get_table_from_dakgg(url)
         stats = self.__deserialize_stats(live_stats)
@@ -25,6 +26,7 @@ class DakRequest(object):
         Returns:
             List[Stat]: 前パッチのライブ統計データ
         """
+        print("Getting previous live stats.")
         url = "https://dak.gg/er/statistics?period=prevPatch&hl=ja"
         live_stats = self.__get_table_from_dakgg(url)
         stats = self.__deserialize_stats(live_stats)
@@ -40,7 +42,7 @@ class DakRequest(object):
             stats (List[Stat]): 統計一覧
         """
         live_stats = self.__get_table_from_dakgg(url)
-        header = self.create_header(live_stats)
+        header = self.__create_header(live_stats)
         stats = self.__deserialize_stats(live_stats)
         print("Writing stats to csv.")
         with open("./stats.csv", "w") as f:
@@ -59,7 +61,6 @@ class DakRequest(object):
             pd.DataFrame: 取得したデータ
         """
         # ライブ統計テーブル取得
-        print("Getting live stats.")
         driver = webdriver.Chrome()
         driver.get(url)
         html = driver.page_source
@@ -70,7 +71,7 @@ class DakRequest(object):
         live_stats = tables[0]
         return live_stats
 
-    def create_header(self, live_stats: pd.DataFrame) -> List[str]:
+    def __create_header(self, live_stats: pd.DataFrame) -> List[str]:
         """DakGGから取得したデータからヘッダを作成する
 
         Args:

@@ -9,25 +9,35 @@ DakGGのライブ統計から情報を取得して色々する。
 
 ## Usage
 
-ひとまずピック率と勝率の閾値をそれぞれ設定して、閾値を超える実験体の一覧を勝率降順で並べて出力する機能を実装してみた。
-他の機能は考え中。
+メタキャラっぽい実験体と強くなったっぽい実験体をそれぞれ出力する。
+メタキャラと判定する条件は、ピック率が2%かつ勝率が13%以上
+強くなったと判定する条件は、前回パッチと今回パッチの統計を比較して、ピック率が下がっておらず、勝率が0.5%より大きく上昇していること。
 
 実行例
 ```bash
-$ python ./src/main.py --pick_threshold 2.0 --win_threshold 10.0
-Getting live stats.
+$ python ./src/main.py
+Searching meta character.
+Getting current live stats.
 Pick % threshold : 2.0%
-Win % threshold : 10.0%
+Win % threshold : 13.0%
 Descending order of Win %.
-1. 【アルカナ ユミン】 [RP: 10.2] [Pick: 3.07%] [Win: 15.29%] [TOP 3: 41.33%] [Avg.Rank: 4.3]
-2. 【両手剣 雪】 [RP: 10.8] [Pick: 2.37%] [Win: 14.11%] [TOP 3: 42.9%] [Avg.Rank: 4.2]
-3. 【突撃小銃 ヘイズ】 [RP: 6.1] [Pick: 2.61%] [Win: 14.01%] [TOP 3: 39.5%] [Avg.Rank: 4.3]
-4. 【斧 マーカス】 [RP: 9.3] [Pick: 2.31%] [Win: 13.86%] [TOP 3: 40.04%] [Avg.Rank: 4.3]
-5. 【突撃小銃 アヤ】 [RP: 8.3] [Pick: 2.57%] [Win: 13.39%] [TOP 3: 39.11%] [Avg.Rank: 4.3]
-6. 【斧 アビゲイル】 [RP: 6.6] [Pick: 2.65%] [Win: 12.65%] [TOP 3: 36.78%] [Avg.Rank: 4.4]
-7. 【弓 莉央】 [RP: 3.8] [Pick: 2.58%] [Win: 12.18%] [TOP 3: 36.14%] [Avg.Rank: 4.5]
-8. 【狙撃銃 カティア】 [RP: 3.5] [Pick: 2.15%] [Win: 12.05%] [TOP 3: 36.27%] [Avg.Rank: 4.5]
-9. 【バット ルク】 [RP: 6.5] [Pick: 2.22%] [Win: 11.85%] [TOP 3: 36.69%] [Avg.Rank: 4.5]
-10. 【両手剣 デビー&マーリン】 [RP: 4.9] [Pick: 3.31%] [Win: 11.77%] [TOP 3: 37.78%] [Avg.Rank: 4.4]
-11. 【金槌 マグヌス】 [RP: 6.4] [Pick: 2.21%] [Win: 11.66%] [TOP 3: 39.15%] [Avg.Rank: 4.3]
+【突撃小銃 ヘイズ】 [RP: 6.9] [Pick: 2.57%] [Win: 14.24%] [TOP 3: 39.39%] [Avg.Rank: 4.3]
+【両手剣 雪】 [RP: 10.6] [Pick: 2.3%] [Win: 14.05%] [TOP 3: 42.69%] [Avg.Rank: 4.2]
+【斧 マーカス】 [RP: 9.9] [Pick: 2.1%] [Win: 14.0%] [TOP 3: 40.49%] [Avg.Rank: 4.3]
+【突撃小銃 アヤ】 [RP: 8.7] [Pick: 2.39%] [Win: 13.29%] [TOP 3: 39.42%] [Avg.Rank: 4.3]
+Searching buffed character.
+Getting current live stats.
+Getting previous live stats.
+Error : Character not found : アルカナ ユミン
+New character may implemented in current patch.
+【斧 マーカス】 [RP: +0.7] [Pick: +0.41%] [Win: +0.89%] [TOP 3: +1.15%] [Avg.Rank: 0.0]
+【レイピア エレナ】 [RP: +0.3] [Pick: +0.01%] [Win: +0.84%] [TOP 3: +0.34%] [Avg.Rank: -0.1]
+【双剣 カミロ】 [RP: +0.5] [Pick: +0.09%] [Win: +0.73%] [TOP 3: +0.62%] [Avg.Rank: -0.1]
+【グローブ ヒョヌ】 [RP: -1.1] [Pick: +0.11%] [Win: +0.53%] [TOP 3: -0.47%] [Avg.Rank: 0.0]
+【鞭 マイ】 [RP: -0.8] [Pick: +0.04%] [Win: +0.56%] [TOP 3: +0.07%] [Avg.Rank: 0.0]
+【バット スア】 [RP: +1.7] [Pick: +0.08%] [Win: +1.14%] [TOP 3: +2.15%] [Avg.Rank: 0.0]
+【アルカナ シャーロット】 [RP: +1.7] [Pick: +0.16%] [Win: +2.38%] [TOP 3: +0.58%] [Avg.Rank: 0.0]
+【アルカナ ヨハン】 [RP: +2.4] [Pick: +0.17%] [Win: +0.81%] [TOP 3: +2.37%] [Avg.Rank: -0.1]
+【斧 ジャッキー】 [RP: +0.9] [Pick: +0.05%] [Win: +0.61%] [TOP 3: +0.85%] [Avg.Rank: -0.1]
+【レイピア フィオラ】 [RP: +1.1] [Pick: +0.04%] [Win: +2.36%] [TOP 3: +0.02%] [Avg.Rank: -0.1]
 ```
