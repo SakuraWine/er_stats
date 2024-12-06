@@ -101,6 +101,9 @@ class DakRequest(object):
         rows = live_stats.values
         stats: List[Stat] = []
         for row in rows:
+            # 勝率が"-"の場合をケア
+            if row[4] == "-":
+                row[4] = "0.0%"
             pick_data = row[3].split("%")
             stat = Stat(
                 character=row[1],
